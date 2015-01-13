@@ -1,0 +1,96 @@
+WC, The Weird Compiler
+=======================
+
+- System requirements:
+----------------------
+
+ o ocaml
+ o ocamlbuild
+ o TeX
+ o pdftex (to run tests)
+ o make
+ o conTeXt (for documentation)
+ o menhir  (to compile to obrowser)
+
+- Compile :
+-----------
+
+ Simply type "make bin"
+
+
+- Documentation :
+-----------------
+
+Simply type "make doc" to generate the file "manual.pdf".
+
+/!\ IF YOU GET THE ERROR MESSAGE "contex.lua not found" or "base.lua not found"
+ON ARCH LINUX, TYPE
+
+sudo sed -i "s|selfautoparent:|/usr/share/|g" "/usr/share/texmf/web2c/texmfcnf.lua"
+
+THEN IT MIGHT WORK.
+
+
+- Examples and Tests :
+----------------------
+
+ Examples are in the "examples" folder. To
+compile example you can either:
+
+ - You can type "make test" from "WC" directory.
+ - Go into directoy "examples/first" and type "make"
+
+
+- Using :
+---------
+
+"./wc.native" can be run without arguments to
+prints help.
+
+"./wc.native -t -i toto.wc -o toto.tex" compiles
+the file "toto.wc" and output the result into file
+"toto.tex". "toto.tex" can be compiled by regular
+tex/pdftex.
+
+
+
+- Online :
+----------
+
+ To use the "Online" version, simply type:
+
+make owc
+
+ to compile and visit "dist/owc/index.html" with
+ your favorite browser (it works best with Firefox).
+ For example:
+
+
+make owc && firefox ./dist/owc/index.html
+
+ will open firefox with OWC.
+
+
+- Licence and Copyright :
+-------------------------
+
+    Copyright (C) 2012 Christophe Calvès
+
+    WC is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    WC is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
+
+- Contact :
+-----------
+
+Christophe DOT Calves HAT gmail DOT com

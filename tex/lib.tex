@@ -1,0 +1,79 @@
+\tracingcommands=2%
+\tracingmacros=2%
+%
+% %%%%%%%%%%%%%%%%%%%%%
+% %    STANDARD LIB   %
+% %%%%%%%%%%%%%%%%%%%%%
+%
+\def\swapa#1#2{#2{#1}}%
+%
+%
+% STACK
+%
+\def\stackcounter{0}%
+\def\stackcountermax{0}%
+%
+\def\stackpush%
+{{%
+\count255=\stackcounter%
+\advance\count255 by 1%
+\xdef\stackcounter{\the\count255}%
+\count254=\stackcountermax%
+\ifnum\stackcounter>\stackcountermax%
+\global\let\stackcountermax=\stackcounter%
+\fi%
+\expandafter\swapa\expandafter{\acc}%
+{\expandafter\gdef\csname stack\romannumeral\stackcounter\endcsname}%
+}}%
+%  
+\def\stackpop#1%
+{%
+\ifnum\stackcounter=0%
+Error: Empty Stack 
+\else%
+\expandafter\let\expandafter#1\expandafter=\csname stack\romannumeral\stackcounter\endcsname%\n
+{\count255=\stackcounter%
+\advance\count255 by -1%
+\xdef\stackcounter{\the\count255}%
+}%
+\fi%
+}%
+%
+% MEMORY
+%
+\def\nextidx{0}%
+%
+\def\mkclosure#1#2%
+{{%
+\count255=#1
+\ifnum\count255=0
+#2%
+\else%
+\count255=\nextidx%
+\advance\count255 by 1%
+\xdef\nextidx{\the\count255}%
+}%
+\expandafter\gdef\expandafter\acc\expandafter{\csname var\romannumeral\nextidx\endcsname}%
+\expandafter\gdef\csname var\romannumeral\nextidx\endcsname##1{##1{#1}{#2}}%
+\fi%
+}%
+%
+\def\closNArgs#1#2{#1}%
+\def\closApply#1#2{#2}%
+%
+\def\derefmkclosure#1#2#3{\mkclosure{#1}{#2\closApply{#3}}}%
+%
+\def\lowapply#1#2%
+{{%
+\count255=#1\closNArgs%
+\advance\count255 by -1
+\ifnum\count255=0
+#1\closApply{#2}
+\else%
+\xdef\thearity{\the\count255}%
+\expandafter\mkclosure\thearity{#1\closApply{#2}}%
+\fi%
+}}%
+%
+\def\apply#1{\expandafter\lowapply\expandafter{\acc}{#1}}%
+%

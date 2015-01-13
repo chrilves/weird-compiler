@@ -1,0 +1,4 @@
+extern myprint 1 ;;
+extern newline 1 ;;
+let f = fun x -> ( myprint "toto" )
+in ( f 0 ; (newline 0) )

@@ -1,0 +1,44 @@
+%
+% %%%%%%%%%%%%%%%%%%%%%
+% %    EXTERN LIB     %
+% %%%%%%%%%%%%%%%%%%%%%
+%
+\def\myprint#1{#1\gdef\acc{0}}
+\def\newline#1{\par\gdef\acc{0}}
+\def\wceq#1#2%
+{%
+\ifnum#1=#2%
+\gdef\acc{1}%
+\else%
+\gdef\acc{0}%
+\fi%
+}%
+%
+\def\wcif#1#2#3%
+{%
+\ifnum#1=0%
+\gdef\acc{#3}%
+\else%
+\gdef\acc{#2}%
+\fi%
+\apply{0}%
+}%
+%
+\def\wcplus#1#2%
+{{%
+\count255=#1%
+\advance\count255 by #2%
+\xdef\acc{\the\count255}%
+}}%
+%
+\def\printstats#1%
+{%
+\vskip 0.5cm
+{\bf Machine Stats}
+
+\hskip 1cm {\sl nextidx}=\nextidx
+
+\hskip 1cm {\sl stackcountermax}=\stackcountermax
+\vskip 0.5cm
+\gdef\acc{0}
+}

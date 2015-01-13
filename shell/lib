@@ -1,0 +1,70 @@
+##########################
+#                        #
+#     STANDARD  LIB      #
+#                        #
+##########################
+
+#
+# ACCUMULATOR
+#
+
+ACC=0
+
+#
+# MEMORY
+#
+
+NEXTIDX=0
+
+#
+# STACK IMPLEMENTATION
+#
+
+STACKIDX=0
+STACKIDXMAX=0
+
+stackpush () {
+  STACKIDX=$(($STACKIDX + 1))
+  export STACK$STACKIDX="$ACC"
+
+  # FOR DEBUG
+  if [ $STACKIDX -gt $STACKIDXMAX ]
+  then STACKIDXMAX=$STACKIDX
+  fi
+}
+
+stackpop () {
+  if [ $STACKIDX -eq 0 ]
+  then echo "EROR: Empty Stack"
+  else export $1=$(eval echo "\$STACK$STACKIDX")
+       STACKIDX=$(($STACKIDX - 1))
+  fi
+}
+
+
+#
+# CLOSURE
+#
+
+# mkclosure arity cmd
+mkclosure () {
+  if [ $1 -eq 0 ]
+  then $2
+  else NEXTIDX=$(($NEXTIDX + 1))
+       ACC=$NEXTIDX
+       export CLOSARG$ACC="$1"
+       export CLOSCMD$ACC="$2"
+  fi
+}
+
+# apply closure arg
+apply () {
+ NARGS=$(( $(eval echo "\$CLOSARG$ACC") - 1 ))
+ CMD=$(eval echo "\$CLOSCMD$ACC" "\"$1\"")
+ if [ $NARGS -eq 0 ]
+ then eval $CMD
+ else mkclosure "$NARGS" "$CMD"
+ fi
+}
+
+

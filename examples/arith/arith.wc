@@ -1,0 +1,22 @@
+extern myprint    1 ;;
+extern newline    1 ;;
+extern wceq       2 ;;
+extern wcplus     2 ;;
+extern printstats 1 ;;
+
+(myprint "37 + 12 $\Rightarrow$ "  ) ;
+(myprint (wcplus 37 12)) ;
+(newline 1)              ;
+
+
+(myprint "12 == 12 $\Rightarrow$ " ) ;
+(myprint (wceq   12 12)) ;
+(newline 1)              ;
+
+
+(myprint "12 == 13 $\Rightarrow$ " ) ;
+(myprint (wceq   12 13)) ;
+
+(printstats 0)
+
+

@@ -1,0 +1,26 @@
+extern myprint    1 ;;
+extern newline    1 ;;
+extern printstats 1 ;;
+
+let phrase = fun qui ->
+ let action = fun quoi ou -> ( (myprint "The great " ) ;
+                               (myprint qui          ) ;
+                               (myprint " eats "     ) ;
+                               (myprint quoi         ) ;
+                               (myprint " in the "   ) ;
+                               (myprint ou           ) ;
+                               (newline 0            )
+                             )
+ in let pommes = action "apples"
+    and poires = action "pears"
+    in ( (pommes "garden." ) ;
+         (pommes "garage." ) ;
+         (poires "castle.") ;
+         (poires "linvngroom."  )
+       )
+in ( ( phrase "Pierre" ) ;
+     ( phrase "Paul"   ) ;
+     ( phrase "Jaques" ) ;
+     ( printstats 0 )
+   )
+         

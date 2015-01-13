@@ -1,0 +1,14 @@
+extern myprint    1 ;;
+extern newline    1 ;;
+extern printstats 1 ;;
+
+if true
+then myprint "first true"
+else (myprint "first false") ;
+(newline 0) ;
+
+if false
+then myprint "second true"
+else (myprint "second false") ;
+
+(printstats 0)

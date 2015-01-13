@@ -1,0 +1,15 @@
+2012/02/16 vesion 0.2
+=====================
+
+ - Reduced closure creation by:
+   - reduce terms at compile time
+   - rec handle directly instead of using fixed-pointed combinator
+   - use direct call when it is possible
+ - New code genetaion:
+   - generic compilation new produce pseudo code  closer to TeX and Shell
+ - New command line parameters to show:
+  - The abstract-syntax tree
+  - The intermediate representation
+  - The intermediate representation after reduction
+  - The super combinator form
+  - The pesudo code form

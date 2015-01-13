@@ -1,0 +1,50 @@
+##########################
+#                        #
+#     EXTERN  LIB        #
+#                        #
+##########################
+
+
+# arity 1
+myprint () {
+ printf "$1"
+ ACC=0
+}
+
+# arity 1
+newline () {
+ echo
+ ACC=0
+}
+
+# arity 2
+wceq () {
+  if [ $1 -eq $2 ]
+  then ACC=1
+  else ACC=0
+  fi
+}
+
+# arity 3
+wcif () {
+ if [ $1 -eq 0 ]
+ then ACC="$3"
+ else ACC="$2"
+ fi
+ apply 0
+}
+
+# arity 2
+wcplus () {
+  ACC=$(($1 + $2))
+}
+
+# arity 1
+printstats () {
+  echo
+  echo "MACHINE STATS"
+  echo "============="
+  echo "   NEXTIDX =$NEXTIDX"
+  echo "   STACKIDX=$STACKIDXMAX"
+  echo
+}

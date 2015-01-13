@@ -1,0 +1,173 @@
+%    Copyright (C) 2012 Christophe Calvès
+%
+%    This file is part of WC.
+%
+%    WC is free software: you can redistribute it and/or modify
+%    it under the terms of the GNU General Public License as published by
+%    the Free Software Foundation, either version 3 of the License, or
+%    (at your option) any later version.
+%
+%    WC is distributed in the hope that it will be useful,
+%    but WITHOUT ANY WARRANTY; without even the implied warranty of
+%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%    GNU General Public License for more details.
+%
+%    You should have received a copy of the GNU General Public License
+%    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+%
+
+
+\starttext
+\section{Installation}
+ In order to compile you need:
+\startitemize
+\item {\tt ocaml}
+\item {\tt ocamlbuild}
+\item {\tt make}
+\stopitemize
+
+
+ You can simply type {\tt make} in the root directory to
+build everything, or you can specify which part you want to
+build with
+\startitemize
+\item {\tt make bin} to build the compiler
+\item {\tt make test} to compile the examples
+\item {\tt make doc} to compile this document
+\item {\tt make archive} to build tar and zip source archives.
+\stopitemize
+
+\section{The Language}
+ This is a minimalist functional language with strict left to right evaluation. Here is the grammar of
+the language. The terminals are:
+\startitemize
+\item Identifiers ({\tt IDENT}) are sequences of character matching the regular expression
+      {\tt [A-Za-z][A-Za-z0-9]*}.
+\item Integers ({\tt INT}) are sequences of character matching the regular expression
+      {\tt -?[0-9]+}.
+\item Strings ({\tt STRING}) are sequences of character enclosed by double quotes.
+\item Booleans are {\tt true} and {\tt false}
+\stopitemize
+
+
+  A program is an expression ({\tt EXPR}) composed of:
+\startitemize
+\item constants: {\tt INT}, booleans and {\tt STRING}.
+
+\item variables : {\tt IDENT}.
+
+\item functions: {\bf fun} ${\tt IDENT}_1$ \ldots\ ${\tt IDENT}_n$ {\bf ->} {\tt EXPR}. For example:
+\starttyping
+fun x y z -> y
+\stoptyping
+
+\item applications: {\bf(} ${\tt EXPR}_0$ ${\tt EXPR}_1$ \ldots\ ${\tt EXPR}_n$ {\bf)}. It applies the
+ arguments $({\tt EXPR}_i)_{i>0}$ to ${\tt EXPR}_0$. {\bf Do not forget the brackets} or you'll be surprised!
+
+\item let-in: {\bf let} {\tt IDENT} = ${\tt EXPR}_1$ {\bf in} ${\tt EXPR}_2$. It computes expression
+${\tt EXPR}_1$, assigns its value to variable {\tt IDENT} and computes ${\tt EXPR}_2$.
+
+\item sequences: {\bf(} ${\tt EXPR}_1$ {\bf;} \ldots\ {\bf;} ${\tt EXPR}_n$ {\bf)}. It computes
+sequentialy the expressions ${\tt EXPR}_1$ to ${\tt EXPR}_n$. The last one is the value of the expression.
+{\bf Do not forget the brackets} or you'll be surprised!
+
+\item if-then-else: {\bf if} ${\tt EXPR}_1$ {\bf then} ${\tt EXPR}_2$ {\bf else} ${\tt EXPR}_3$.
+If ${\tt EXPR}_1$ evaluates to {\tt true}, then ${\tt EXPR}_2$ is evaluated otherwise ${\tt EXPR}_3$
+is. The value of the expression is the one of the branch being evaluated.
+
+\stopitemize
+\section{Primitives}
+
+ Primitives are functions written directly in \TeX or in shell.
+
+
+ Primitives written in \TeX must have an argumet pattern of the form {\tt \#1\ldots\#n}. They must
+return a value by redefining the macro {\tt acc}. Finally, they must be placed in the file {\tt tex/extern.tex}.
+For example, the addition over integers is defined in {\tt tex/extern.tex} by:
+\starttyping
+\def\wcplus#1#2%
+{{%
+\count255=#1%
+\advance\count255 by #2%
+\xdef\acc{\the\count255}%
+}}%
+\stoptyping
+
+ Primitives written in shell must return a value by redefining the variable {\tt ACC}. They must be placed in
+the file {\tt shell/extern.sh}. For example, the addition over integers is defined in {\tt shell/extern.sh} by:
+\starttyping
+wcplus () {
+  ACC=$(($1 + $2))
+}
+\stoptyping
+
+ Primitives can be used as identifiers. But they {\bf must} be declared first. A primitive is
+declared by the statement: {\bf extern} {\sl primitive-name} {\sl arity} {\bf;;} at the begining
+if the program. For example, {\tt wcplus} is declared by:
+\starttyping
+extern wcplus 2 ;;
+\stoptyping
+
+\section{Compiling and Executing}
+
+A program is compiled to \TeX by:
+\starttyping
+wc.native -t -i input-file -o output-file
+\stoptyping
+and to POSIX shell by:\starttyping
+wc.native -s -i input-file -o output-file
+\stoptyping
+
+
+{\tt output-file} can be run as any other shell script or \TeX file. For example, the program
+{\tt first.wc}:
+\starttyping
+extern myprint    1 ;;
+extern newline    1 ;;
+extern printstats 1 ;;
+
+let phrase = fun qui ->
+ let action = fun quoi ou -> ( (myprint "The great " ) ;
+                               (myprint qui          ) ;
+                               (myprint " eats "     ) ;
+                               (myprint quoi         ) ;
+                               (myprint " in the "   ) ;
+                               (myprint ou           ) ;
+                               (newline 0            )
+                             )
+ in let pommes = action "apples"
+    and poires = action "pears"
+    in ( (pommes "garden." ) ;
+         (pommes "garage." ) ;
+         (poires "castle.") ;
+         (poires "linvngroom."  )
+       )
+in ( ( phrase "Pierre" ) ;
+     ( phrase "Paul"   ) ;
+     ( phrase "Jaques" )
+   )
+\stoptyping
+
+can be compied and ran to \TeX and shell by
+\starttyping
+wc.native -t -i first.tex -o first.tex
+wc.native -s -i first.tex -o first.sh
+\stoptyping
+
+Its output is:
+\starttyping
+The great Pierre eats apples in the garden.
+The great Pierre eats apples in the garage.
+The great Pierre eats pears in the castle.
+The great Pierre eats pears in the linvngroom.
+The great Paul eats apples in the garden.
+The great Paul eats apples in the garage.
+The great Paul eats pears in the castle.
+The great Paul eats pears in the linvngroom.
+The great Jaques eats apples in the garden.
+The great Jaques eats apples in the garage.
+The great Jaques eats pears in the castle.
+The great Jaques eats pears in the linvngroom.
+\stoptyping
+
+\stoptext

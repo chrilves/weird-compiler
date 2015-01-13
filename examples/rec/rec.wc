@@ -1,0 +1,22 @@
+extern myprint    1 ;;
+extern newline    1 ;;
+extern wceq       2 ;;
+extern wcplus     2 ;;
+extern printstats 1 ;;
+
+let phrase = "Ligne "
+and z      = wcplus 3 4
+in
+let rec listing = fun x -> if wceq x 2000
+                           then  myprint "fin!" ;
+                                (newline 0)
+                           else ( myprint phrase ;
+                                  myprint z      ;
+                                  myprint " = "  ;
+                                  myprint x      ;
+                                  newline 0      ;
+                                  (listing (wcplus x 1))
+                                )
+in ( listing 0 ;
+    (printstats 0)
+   )
